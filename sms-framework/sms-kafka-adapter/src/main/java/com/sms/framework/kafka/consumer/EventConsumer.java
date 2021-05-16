@@ -12,7 +12,7 @@ public class EventConsumer {
 
     @KafkaListener(topics = "#{KafkaConfig.topic}")
     public void consume(String message) throws IOException {
-        log.info(String.format("kafka message {}",message));
+//        log.info(String.format("kafka message {}",message));
     }
 
 }

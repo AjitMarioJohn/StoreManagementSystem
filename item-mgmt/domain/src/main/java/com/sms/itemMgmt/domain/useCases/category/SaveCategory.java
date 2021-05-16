@@ -29,7 +29,7 @@ public class SaveCategory extends UseCase<SaveCategory.InputValues, SaveCategory
         else
             Category.of(input.getId(), input.getName());
 
-        categoryCommand.persist(category.toData());
+//        categoryCommand.persist(category.toData());
         return new OutputValues(category);
     }
 

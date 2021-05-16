@@ -15,22 +15,28 @@
 	<description>Framework for the store management system</description>
 	<packaging>pom</packaging>
 	<properties>
-		<java.version>16</java.version>
-		<maven.compiler.source>16</maven.compiler.source>
-		<maven.compiler.target>16</maven.compiler.target>
+		<java.version>11</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 	<modules>
 		<module>commons</module>
         <module>sms-kafka-adapter</module>
         <module>sms-security</module>
-        <module>sms-logging</module>
-    </modules>
+		<module>sms-logging</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -41,6 +47,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -37,9 +37,9 @@ public class Category {
         ), Status.valueOf(categoryData.getStatus()));
     }
 
-    public CategoryData toData() {
-        return new CategoryData(this.id.getValue(), this.name.getValue(), this.status.toString());
-    }
+//    public CategoryData toData() {
+//        return new CategoryData(this.id.getValue(), this.name.getValue(), this.status.toString());
+//    }
 
     public void setStatusToInActive(){
         this.status = Status.INACTIVE;
