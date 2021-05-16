@@ -1,0 +1,24 @@
+server:
+  port: 9000
+
+
+com:
+  sms:
+    kafka:
+      topic: smsevents
+      bootstrapAddress: localhost:9092
+      partitions: 2
+      replicas: 2
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: ${com.sms.kafka.bootstrapAddress}
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: ${com.sms.kafka.bootstrapAddress}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
