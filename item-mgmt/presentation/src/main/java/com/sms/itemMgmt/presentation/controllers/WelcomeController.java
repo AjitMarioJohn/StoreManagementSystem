@@ -1,9 +1,8 @@
 package com.sms.itemMgmt.presentation.controllers;
 
+import com.sms.common.annotations.RestApiController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.sms.framework.commons.annotations.RestApiController;
 
 @RestApiController
 public class WelcomeController {

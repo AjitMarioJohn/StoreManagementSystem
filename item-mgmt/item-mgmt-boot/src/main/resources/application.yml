@@ -6,22 +6,26 @@ item:
     welcome-msg: "Welcome to item mgmt module VERSION 0.0.1"
 
 debug: true
-
-sms:
-    rest:
-        base-api: "/sms/api/"
+#
+#sms:
+#    rest:
+#        base-api: "/sms/api/"
 
 spring:
   datasource:
-    hikari:
-      connectionTimeout: 20000
-      maximumPoolSize: 5
-    url: jdbc:postgresql://localhost:5432/itemMgmt
-    username: root
-    password: root
+#    hikari:
+#      connectionTimeout: 20000
+#      maximumPoolSize: 5
+    url: jdbc:h2:mem:sampledb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: sa
+  h2:
+    console:
+      enabled: true
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect

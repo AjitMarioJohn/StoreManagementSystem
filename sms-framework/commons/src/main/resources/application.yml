@@ -1,3 +1,0 @@
-sms:
-    rest:
-        base-api: /sms/api
