@@ -1,4 +1,2 @@
 com\sms\common\constant\HttpHeaderConstant.class
-com\sms\common\CommonConfiguration.class
-com\sms\common\annotations\RestApiController.class
 module-info.class

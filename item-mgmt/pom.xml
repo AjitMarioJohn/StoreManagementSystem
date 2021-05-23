@@ -20,36 +20,28 @@
 	<name>item-mgmt</name>
 	<description>This module will manage items and it's inventory</description>
 	<packaging>pom</packaging>
-
+	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<sms.parent.version>1.0-SNAPSHOT</sms.parent.version>
+	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-hateoas</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.sms.parent</groupId>
 			<artifactId>sms-parent</artifactId>
 			<type>pom</type>
-			<version>1.0-SNAPSHOT</version>
+			<version>${sms.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>com.sms.parent</groupId>
+			<artifactId>sms-common</artifactId>
+			<version>${sms.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sms.parent</groupId>
+			<artifactId>sms-logging</artifactId>
+			<version>${sms.parent.version}</version>
 		</dependency>
 	</dependencies>
 

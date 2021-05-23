@@ -1,4 +1,0 @@
---patch-module
-com.sms.parent.common=_
---add-reads
-com.sms.parent.common=ALL-UNNAMED
