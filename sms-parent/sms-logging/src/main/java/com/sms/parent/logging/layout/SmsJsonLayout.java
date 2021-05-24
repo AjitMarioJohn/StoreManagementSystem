@@ -1,3 +1,7 @@
+/*
+ This custom layout of logging done in Store Management System. This is class is designed
+ using the reference of github project https://github.com/ivandzf/log4j2-custom-layout
+*/
 package com.sms.parent.logging.layout;
 
 import com.sms.common.models.IPAddressModel;
@@ -9,11 +13,9 @@ import com.sms.parent.logging.model.LogSourceInfo;
 import com.sms.parent.logging.model.SmsLayoutModel;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Node;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.impl.ThrowableProxy;
 import org.apache.logging.log4j.core.layout.AbstractStringLayout;
@@ -35,19 +37,17 @@ public final class SmsJsonLayout extends AbstractStringLayout {
     private static final Matcher isMessageTextFormatMatcher = Pattern.compile("^((?!.*\\{.*[a-zA-Z]+.*\\}).*\\{\\d.*)*$").matcher("");
 
 
-    protected SmsJsonLayout(Configuration config, Charset aCharset, Serializer headerSerializer, Serializer footerSerializer,
-                            String serviceName, String version) {
-        super(config, aCharset, headerSerializer, footerSerializer);
+    protected SmsJsonLayout(String serviceName, String version) {
+        super(UTF8);
         this.serviceName = serviceName;
         this.version = version;
     }
 
     @PluginFactory
-    public static SmsJsonLayout createLayout(@PluginConfiguration final Configuration config,
-                                                @PluginAttribute(value = "charset", defaultString = "US-ASCII") final Charset charset,
-                                                @PluginAttribute(value = "serviceName", defaultString = "") final String serviceName,
+    public static SmsJsonLayout createLayout(@PluginAttribute(value = "serviceName", defaultString = "") final String serviceName,
                                              @PluginAttribute(value = "version", defaultString = "") final String version) {
-        return new SmsJsonLayout(config, UTF8, null, null, serviceName, version);
+
+        return new SmsJsonLayout(serviceName, version);
     }
 
     @Override
@@ -156,7 +156,7 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //        }
 //
 //        return gson.toJson(jsonObject).concat("\r\n");
-        return Optional.ofNullable(JacksonUtils.marshalToJSON.apply(smsLayoutModel)).orElse("");
+        return Optional.ofNullable(JacksonUtils.marshalToJSON.apply(smsLayoutModel)).orElse("")+"\n";
     }
 
     private Function<ThrowableProxy, LogExceptionInfo> convertToExceptionLog = (thrownProxy) -> {
