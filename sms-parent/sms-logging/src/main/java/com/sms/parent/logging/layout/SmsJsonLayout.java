@@ -31,11 +31,15 @@ import java.util.regex.Pattern;
 @Plugin(name = "SmsJsonLayout", category = Node.CATEGORY, elementType = Layout.ELEMENT_TYPE, printObject = true)
 public final class SmsJsonLayout extends AbstractStringLayout {
 
-    private final String serviceName;
-    private final String version;
     private static final Charset UTF8 = StandardCharsets.UTF_8;
     private static final Matcher isMessageTextFormatMatcher = Pattern.compile("^((?!.*\\{.*[a-zA-Z]+.*\\}).*\\{\\d.*)*$").matcher("");
-
+    private final String serviceName;
+    private final String version;
+    private Function<ThrowableProxy, LogExceptionInfo> convertToExceptionLog = (thrownProxy) -> {
+        final Throwable throwable = thrownProxy.getThrowable();
+        return LogExceptionInfo.builder().exception(throwable.getClass().getCanonicalName())
+                .cause(throwable.getMessage()).stacktrace(thrownProxy.getExtendedStackTraceAsString("")).build();
+    };
 
     protected SmsJsonLayout(String serviceName, String version) {
         super(UTF8);
@@ -99,8 +103,8 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //        jsonObject.addProperty("thread", event.getThreadName());
 //        jsonObject.addProperty("threadId", event.getThreadId());
 //        jsonObject.addProperty("loggerName", event.getLoggerName());
-//
-//        // Log Location Information
+
+        // Log Location Information
 //        if (locationInfo) {
 //            final StackTraceElement source = event.getSource();
 //
@@ -112,8 +116,8 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //
 //            jsonObject.add("source", sourceObject);
 //        }
-//
-//        // Message
+
+        // Message
 //        CustomMessage customMessage = JsonUtils.generateCustomMessage(event.getMessage().getFormattedMessage());
 //        if (customMessage != null) {
 //            jsonObject.addProperty("message", customMessage.getMessage());
@@ -133,8 +137,8 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //        } else {
 //            jsonObject.addProperty("message", event.getMessage().getFormattedMessage());
 //        }
-//
-//        // Exceptions
+
+        // Exceptions
 //        if (event.getThrownProxy() != null) {
 //            final ThrowableProxy thrownProxy = event.getThrownProxy();
 //            final Throwable throwable = thrownProxy.getThrowable();
@@ -154,14 +158,8 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //                jsonObject.addProperty("stacktrace", stackTrace);
 //            }
 //        }
-//
-//        return gson.toJson(jsonObject).concat("\r\n");
-        return Optional.ofNullable(JacksonUtils.marshalToJSON.apply(smsLayoutModel)).orElse("")+"\n";
-    }
 
-    private Function<ThrowableProxy, LogExceptionInfo> convertToExceptionLog = (thrownProxy) -> {
-        final Throwable throwable = thrownProxy.getThrowable();
-        return LogExceptionInfo.builder().exception(throwable.getClass().getCanonicalName())
-                .cause(throwable.getMessage()).stacktrace(thrownProxy.getExtendedStackTraceAsString("")).build();
-    };
+//        return gson.toJson(jsonObject).concat("\r\n");
+        return Optional.ofNullable(JacksonUtils.marshalToJSON.apply(smsLayoutModel)).orElse("") + "\n";
+    }
 }
