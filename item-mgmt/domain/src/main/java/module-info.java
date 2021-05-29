@@ -1,5 +1,4 @@
 module itemMgmt.domain {
-    requires com.sms.framework.commons;
     requires lombok;
     requires itemMgmt.infrastructure;
     requires spring.beans;

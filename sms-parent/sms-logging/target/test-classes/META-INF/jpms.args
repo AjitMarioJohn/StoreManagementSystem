@@ -1,0 +1,4 @@
+--patch-module
+com.sms.parent.logging=_
+--add-reads
+com.sms.parent.logging=ALL-UNNAMED

@@ -1,6 +1,5 @@
 package com.sms.itemMgmt.domain.useCases.category;
 
-import com.sms.framework.commons.exception.InvalidUniqueId;
 import com.sms.itemMgmt.domain.entities.Category;
 import com.sms.itemMgmt.domain.exceptions.InvalidNameException;
 import com.sms.itemMgmt.domain.useCases.UseCase;
@@ -22,14 +21,14 @@ public class SaveCategory extends UseCase<SaveCategory.InputValues, SaveCategory
     }
 
     @Override
-    public OutputValues execute (InputValues input) throws InvalidNameException, InvalidUniqueId {
+    public OutputValues execute (InputValues input) throws InvalidNameException {
         Category category = null;
-        if(input.getId() == null)
-            Category.of(input.getName());
-        else
-            Category.of(input.getId(), input.getName());
+//        if(input.getId() == null)
+//            Category.of(input.getName());
+//        else
+//            Category.of(input.getId(), input.getName());
 
-        categoryCommand.persist(category.toData());
+//        categoryCommand.persist(category.toData());
         return new OutputValues(category);
     }
 

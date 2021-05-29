@@ -21,55 +21,27 @@
 	<description>This module will manage items and it's inventory</description>
 	<packaging>pom</packaging>
 	<properties>
-		<java.version>16</java.version>
-		<sms.framework.version>0.0.1-SNAPSHOT</sms.framework.version>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<sms.parent.version>1.0-SNAPSHOT</sms.parent.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>com.sms.parent</groupId>
+			<artifactId>sms-parent</artifactId>
+			<type>pom</type>
+			<version>${sms.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-hateoas</artifactId>
+			<groupId>com.sms.parent</groupId>
+			<artifactId>sms-common</artifactId>
+			<version>${sms.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.sms.framework</groupId>
-			<artifactId>commons</artifactId>
-			<version>${sms.framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sms.framework</groupId>
-			<artifactId>commons</artifactId>
-			<version>${sms.framework.version}</version>
+			<groupId>com.sms.parent</groupId>
+			<artifactId>sms-logging</artifactId>
+			<version>${sms.parent.version}</version>
 		</dependency>
 	</dependencies>
 

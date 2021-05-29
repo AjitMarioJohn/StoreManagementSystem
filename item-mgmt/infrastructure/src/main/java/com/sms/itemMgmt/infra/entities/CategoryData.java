@@ -10,7 +10,6 @@ import java.util.UUID;
 @Entity(name = "category")
 @Table(name = "category")
 @AllArgsConstructor
-@NoArgsConstructor
 public class CategoryData {
     @Id
     private UUID pk;
@@ -21,23 +20,12 @@ public class CategoryData {
         return pk;
     }
 
-    public void setPk (UUID pk) {
-        this.pk = pk;
-    }
-
     public String getName () {
         return name;
-    }
-
-    public void setName (String name) {
-        this.name = name;
     }
 
     public String getStatus () {
         return status;
     }
 
-    public void setStatus (String status) {
-        this.status = status;
-    }
 }
