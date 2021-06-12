@@ -19,6 +19,7 @@
         </processorPath>
         <module name="sms-common" />
         <module name="sms-logging" />
+        <module name="sms-security" />
       </profile>
     </annotationProcessing>
   </component>
@@ -26,6 +27,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="sms-common" options="-parameters" />
       <module name="sms-logging" options="-parameters" />
+      <module name="sms-security" options="-parameters" />
     </option>
   </component>
 </project>

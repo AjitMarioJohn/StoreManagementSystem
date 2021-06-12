@@ -17,6 +17,7 @@
     <modules>
         <module>sms-common</module>
         <module>sms-logging</module>
+        <module>sms-security</module>
     </modules>
     <packaging>pom</packaging>
 

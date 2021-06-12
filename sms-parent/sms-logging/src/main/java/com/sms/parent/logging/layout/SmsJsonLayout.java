@@ -4,27 +4,25 @@
 */
 package com.sms.parent.logging.layout;
 
-import com.sms.common.models.IPAddressModel;
-import com.sms.common.utils.DateTimeUtils;
-import com.sms.common.utils.IPAddressUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sms.common.utils.JacksonUtils;
-import com.sms.parent.logging.model.LogExceptionInfo;
-import com.sms.parent.logging.model.LogSourceInfo;
-import com.sms.parent.logging.model.SmsLayoutModel;
+import com.sms.parent.logging.handler.LogHandler;
+import com.sms.parent.logging.handler.impl.BasicDetailsConcreteHandler;
+import com.sms.parent.logging.handler.impl.ExceptioninfoConcreteHandler;
+import com.sms.parent.logging.handler.impl.SourceInfoConcreteHandler;
+import com.sms.parent.logging.utils.ParameterDescriptor;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Node;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.core.impl.ThrowableProxy;
 import org.apache.logging.log4j.core.layout.AbstractStringLayout;
 
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,11 +33,7 @@ public final class SmsJsonLayout extends AbstractStringLayout {
     private static final Matcher isMessageTextFormatMatcher = Pattern.compile("^((?!.*\\{.*[a-zA-Z]+.*\\}).*\\{\\d.*)*$").matcher("");
     private final String serviceName;
     private final String version;
-    private Function<ThrowableProxy, LogExceptionInfo> convertToExceptionLog = (thrownProxy) -> {
-        final Throwable throwable = thrownProxy.getThrowable();
-        return LogExceptionInfo.builder().exception(throwable.getClass().getCanonicalName())
-                .cause(throwable.getMessage()).stacktrace(thrownProxy.getExtendedStackTraceAsString("")).build();
-    };
+
 
     protected SmsJsonLayout(String serviceName, String version) {
         super(UTF8);
@@ -56,25 +50,21 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 
     @Override
     public String toSerializable(LogEvent logEvent) {
-        IPAddressModel ipAddressModel = null;
-        try {
-            ipAddressModel = IPAddressUtils.getIpDetails();
-        } catch (UnknownHostException e) {
-           ipAddressModel = new IPAddressModel();
-        }
+        LogHandler exceptioninfoConcreteHandler = new ExceptioninfoConcreteHandler();
+        LogHandler sourceInfoConcreteHandler = new SourceInfoConcreteHandler();
+        LogHandler basicDetailsConcreteHandler = new BasicDetailsConcreteHandler();
 
-        final StackTraceElement source = logEvent.getSource();
-        LogSourceInfo sourceInfo = LogSourceInfo.builder().className(source.getClassName())
-                                   .methodName(source.getMethodName()).fileName(source.getFileName())
-                                    .lineNumber(String.valueOf(source.getLineNumber())).build();
+        basicDetailsConcreteHandler.setLogHandler(sourceInfoConcreteHandler);
+        sourceInfoConcreteHandler.setLogHandler(exceptioninfoConcreteHandler);
 
-        final LogExceptionInfo exceptionInfo = Optional.ofNullable(logEvent.getThrownProxy()).map(this.convertToExceptionLog).orElse(LogExceptionInfo.builder().build());
-        SmsLayoutModel smsLayoutModel = SmsLayoutModel.builder().serviceName(this.serviceName)
-                .version(this.version).hostName(ipAddressModel.getHostName())
-                .hostAddress(ipAddressModel.getHostAddress()).level(logEvent.getLevel().name())
-                .thread(logEvent.getThreadName()).threadId(String.valueOf(logEvent.getThreadId()))
-                .loggerName(logEvent.getLoggerName()).sourceInfo(sourceInfo).logDateTime(DateTimeUtils.instantDateTime.get())
-                .message(logEvent.getMessage().getFormattedMessage()).exceptionInfo(exceptionInfo).build();
+        ObjectMapper mapper = JacksonUtils.createObjectMapper.get();
+        ObjectNode node = basicDetailsConcreteHandler.createSchema(mapper, logEvent);
+        node.put(ParameterDescriptor.SERVICE_NAME, serviceName);
+        node.put(ParameterDescriptor.SERVICE_VERSION, version);
+        return Optional.ofNullable(JacksonUtils.convertNodeToString.apply(mapper, node)).orElse("") + "\n";
+    }
+}
+
 
 //        if (hideEnvironmentWhenNull) {
 //            if (!LogEnvironment.hasPort() || !LogEnvironment.hasIpAddress() || !LogEnvironment.hasApplicationName())
@@ -104,7 +94,7 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //        jsonObject.addProperty("threadId", event.getThreadId());
 //        jsonObject.addProperty("loggerName", event.getLoggerName());
 
-        // Log Location Information
+// Log Location Information
 //        if (locationInfo) {
 //            final StackTraceElement source = event.getSource();
 //
@@ -117,7 +107,7 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //            jsonObject.add("source", sourceObject);
 //        }
 
-        // Message
+// Message
 //        CustomMessage customMessage = JsonUtils.generateCustomMessage(event.getMessage().getFormattedMessage());
 //        if (customMessage != null) {
 //            jsonObject.addProperty("message", customMessage.getMessage());
@@ -138,7 +128,7 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //            jsonObject.addProperty("message", event.getMessage().getFormattedMessage());
 //        }
 
-        // Exceptions
+// Exceptions
 //        if (event.getThrownProxy() != null) {
 //            final ThrowableProxy thrownProxy = event.getThrownProxy();
 //            final Throwable throwable = thrownProxy.getThrowable();
@@ -160,6 +150,3 @@ public final class SmsJsonLayout extends AbstractStringLayout {
 //        }
 
 //        return gson.toJson(jsonObject).concat("\r\n");
-        return Optional.ofNullable(JacksonUtils.marshalToJSON.apply(smsLayoutModel)).orElse("") + "\n";
-    }
-}
